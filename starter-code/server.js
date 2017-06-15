@@ -8,7 +8,7 @@ const requestProxy = require('express-request-proxy'); // REVIEW: We've added a 
 const PORT = process.env.PORT || 3000;
 const app = express();
 // const conString = 'postgres://USERNAME:PASSWORD@HOST:PORT';
-const conString = ''; // TODO: Don't forget to set your own conString
+const conString = 'postgres:@localhost:5432/kilovolt'; // TODO: Don't forget to set your own conString
 const client = new pg.Client(conString);
 client.connect();
 client.on('error', err => console.error(err));
@@ -18,8 +18,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('./public'));
 
 
-// COMMENT: What is this function doing? Why do we need it? Where does it receive a request from?
-// (put your response in a comment here)
+// DONE: What is this function doing? Why do we need it? Where does it receive a request from?
+// This function uses our GitHub personal access token (assigned in a separate .env file), to request our personal repo data from GH's API. The response we get should successfully pull our account's data from GitHub.
 function proxyGitHub(request, response) {
   console.log('Routing GitHub request for', request.params[0]);
   (requestProxy({
@@ -29,8 +29,8 @@ function proxyGitHub(request, response) {
 }
 
 
-// COMMENT: What is this route doing? Where does it receive a request from?
-// (put your response in a comment here)
+// DONE: What is this route doing? Where does it receive a request from?
+// These .get functions are putting out requests for our HTML files, and responding with the appropriate root files. The last one responds with the result of our proxyGitHub function, assuming it was successful.
 app.get('/new', (request, response) => response.sendFile('new.html', {root: './public'}));
 app.get('/admin', (request, response) => response.sendFile('admin.html', {root: './public'}));
 app.get('/github/*', proxyGitHub);
@@ -106,8 +106,8 @@ app.post('/articles', function(request, response) {
 });
 
 
-// COMMENT: What is this route doing? Where does it receive a request from?
-// (put your response in a comment here)
+// DONE: What is this route doing? Where does it receive a request from?
+// This PUT request updates the authors table, and then the articles table, which are already joined by an above function. It receives the request data from our articles.json data and the newArtcile.submit functions which call the insertRecord function from article.js.
 app.put('/articles/:id', (request, response) => {
   client.query(`
     UPDATE authors
