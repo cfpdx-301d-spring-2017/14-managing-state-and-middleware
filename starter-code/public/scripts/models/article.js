@@ -54,7 +54,8 @@ var app = app || {};
                       }, []);
   };
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // C-OMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // This function takes no parameters. It returns a new array of objects that consist of two properties--the author's name and the total number of words written by that author for all their articles. It takes the Article.allAuthors array of author names as strings and applies map to it to create the new array property of numWordsByAuthor. It was called in adminView.js by initAdminPage. It uses map, filter, reduce, match (with a regex expression to find spaces), and allAuthors (which is a function that returns an array, so it's both really...).
   Article.numWordsByAuthor = () => {
     return Article.allAuthors().map(author => {
       return {
