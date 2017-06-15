@@ -4,7 +4,8 @@ var app = app || {};
 (function(module) {
   const newArticle = {};
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // This function is showing the sections with a calss of .tab-content and hiding the items with the id of export-field. We then have an even listener that highlights the json code. The next to event listeners allow the user to change and submit a new article as they change input fields on the form. 
   newArticle.initNewArticlePage = function() {
     $('.tab-content').show();
     $('#export-field').hide();

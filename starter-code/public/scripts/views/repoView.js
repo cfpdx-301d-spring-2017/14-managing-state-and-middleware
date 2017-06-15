@@ -13,7 +13,8 @@ var app = app || {};
 
   const render = Handlebars.compile($('#repo-template').text());
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // This function appends the repo data to the ul, filtering it by 'name' using the Handlebars template. It calls the ui fn that is displayed above and empties the ul. 
   repoView.index = function() {
     ui();
 
