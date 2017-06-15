@@ -8,7 +8,7 @@ const requestProxy = require('express-request-proxy'); // REVIEW: We've added a 
 const PORT = process.env.PORT || 3000;
 const app = express();
 // const conString = 'postgres://USERNAME:PASSWORD@HOST:PORT';
-const conString = ''; // TODO: Don't forget to set your own conString
+const conString = 'postgres:@localhost:5432/kilovolt'; // TODO: Don't forget to set your own conString
 const client = new pg.Client(conString);
 client.connect();
 client.on('error', err => console.error(err));
@@ -18,8 +18,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('./public'));
 
 
-// COMMENT: What is this function doing? Why do we need it? Where does it receive a request from?
-// (put your response in a comment here)
+// DONE: What is this function doing? Why do we need it? Where does it receive a request from?
+// This function uses our GitHub personal access token (assigned in a separate .env file), to request our personal repo data from GH's API. The response we get should successfully pull our account's data from GitHub.
 function proxyGitHub(request, response) {
   console.log('Routing GitHub request for', request.params[0]);
   (requestProxy({
@@ -29,8 +29,8 @@ function proxyGitHub(request, response) {
 }
 
 
-// COMMENT: What is this route doing? Where does it receive a request from?
-// (put your response in a comment here)
+// DONE: What is this route doing? Where does it receive a request from?
+// These .get functions are putting out requests for our HTML files, and responding with the appropriate root files. The last one responds with the result of our proxyGitHub function, assuming it was successful.
 app.get('/new', (request, response) => response.sendFile('new.html', {root: './public'}));
 app.get('/admin', (request, response) => response.sendFile('admin.html', {root: './public'}));
 app.get('/github/*', proxyGitHub);
@@ -43,15 +43,15 @@ app.get('/articles/find', (request, response) => {
             WHERE ${request.query.field}=$1`
 
   client.query(sql, [request.query.val])
-  .then(result => response.send(result.rows))
-  .catch(console.error);
+    .then(result => response.send(result.rows))
+    .catch(console.error);
 })
 
 // REVIEW: This is a new route for gathering all of the unique categories from our articles table
 app.get('/categories', (request, response) => {
   client.query(`SELECT DISTINCT category FROM articles;`)
-  .then(result => response.send(result.rows))
-  .catch(console.error);
+    .then(result => response.send(result.rows))
+    .catch(console.error);
 })
 
 app.get('/articles', (request, response) => {
@@ -60,8 +60,8 @@ app.get('/articles', (request, response) => {
     INNER JOIN authors
       ON articles.author_id=authors.author_id;`
   )
-  .then(result => response.send(result.rows))
-  .catch(console.error);
+    .then(result => response.send(result.rows))
+    .catch(console.error);
 });
 
 app.post('/articles', function(request, response) {
@@ -106,8 +106,8 @@ app.post('/articles', function(request, response) {
 });
 
 
-// COMMENT: What is this route doing? Where does it receive a request from?
-// (put your response in a comment here)
+// DONE: What is this route doing? Where does it receive a request from?
+// This PUT request updates the authors table, and then the articles table, which are already joined by an above function. It receives the request data from our articles.json data and the newArtcile.submit functions which call the insertRecord function from article.js.
 app.put('/articles/:id', (request, response) => {
   client.query(`
     UPDATE authors
@@ -116,24 +116,24 @@ app.put('/articles/:id', (request, response) => {
     `,
     [request.body.author, request.body.authorUrl, request.body.author_id]
   )
-  .then(() => {
-    client.query(`
+    .then(() => {
+      client.query(`
       UPDATE articles
       SET author_id=$1, title=$2, category=$3, "publishedOn"=$4, body=$5
       WHERE article_id=$6
       `,
-      [
-        request.body.author_id,
-        request.body.title,
-        request.body.category,
-        request.body.publishedOn,
-        request.body.body,
-        request.params.id
-      ]
-    )
-  })
-  .then(() => response.send('Update complete'))
-  .catch(console.error);
+        [
+          request.body.author_id,
+          request.body.title,
+          request.body.category,
+          request.body.publishedOn,
+          request.body.body,
+          request.params.id
+        ]
+      )
+    })
+    .then(() => response.send('Update complete'))
+    .catch(console.error);
 });
 
 app.delete('/articles/:id', (request, response) => {
@@ -141,14 +141,14 @@ app.delete('/articles/:id', (request, response) => {
     `DELETE FROM articles WHERE article_id=$1;`,
     [request.params.id]
   )
-  .then(() => response.send('Delete complete'))
-  .catch(console.error);
+    .then(() => response.send('Delete complete'))
+    .catch(console.error);
 });
 
 app.delete('/articles', (request, response) => {
   client.query('DELETE FROM articles')
-  .then(() => response.send('Delete complete'))
-  .catch(console.error);
+    .then(() => response.send('Delete complete'))
+    .catch(console.error);
 });
 
 app.get('*', (request, response) => response.sendFile('index.html', {root: './public'}));
@@ -167,31 +167,31 @@ function loadAuthors() {
         'INSERT INTO authors(author, "authorUrl") VALUES($1, $2) ON CONFLICT DO NOTHING',
         [ele.author, ele.authorUrl]
       )
-      .catch(console.error);
+        .catch(console.error);
     })
   })
 }
 
 function loadArticles() {
   client.query('SELECT COUNT(*) FROM articles')
-  .then(result => {
-    if(!parseInt(result.rows[0].count)) {
-      fs.readFile('./public/data/hackerIpsum.json', (err, fd) => {
-        JSON.parse(fd.toString()).forEach(ele => {
-          client.query(`
+    .then(result => {
+      if(!parseInt(result.rows[0].count)) {
+        fs.readFile('./public/data/hackerIpsum.json', (err, fd) => {
+          JSON.parse(fd.toString()).forEach(ele => {
+            client.query(`
             INSERT INTO
             articles(author_id, title, category, "publishedOn", body)
             SELECT author_id, $1, $2, $3, $4
             FROM authors
             WHERE author=$5;
           `,
-            [ele.title, ele.category, ele.publishedOn, ele.body, ele.author]
-          )
-          .catch(console.error);
+              [ele.title, ele.category, ele.publishedOn, ele.body, ele.author]
+            )
+              .catch(console.error);
+          })
         })
-      })
-    }
-  })
+      }
+    })
 }
 
 function loadDB() {
@@ -203,8 +203,8 @@ function loadDB() {
       "authorUrl" VARCHAR (255)
     );`
   )
-  .then(loadAuthors)
-  .catch(console.error);
+    .then(loadAuthors)
+    .catch(console.error);
 
   client.query(`
     CREATE TABLE IF NOT EXISTS
@@ -217,6 +217,6 @@ function loadDB() {
       body TEXT NOT NULL
     );`
   )
-  .then(loadArticles)
-  .catch(console.error);
+    .then(loadArticles)
+    .catch(console.error);
 }
