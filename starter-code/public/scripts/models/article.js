@@ -13,13 +13,15 @@ var app = app || {};
 
   // REVIEW: With ES6 arrow functions, if the function only has one parameter, you don't need parentheses.
   //         This is similar to saying Article.loadAll = function(rows).
-    // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+    // C-OMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+    // This method sorts our articles according to most recently published and fills our Article.all array with a new array made up of new article objects created out of the rows array data. This is called in fetchAll, immediately below here. It uses uses some array methods and builtins, but it doesn't call any of the functions or methods we wrote.
   Article.loadAll = rows => {
     rows.sort((a,b) => (new Date(b.publishedOn)) - (new Date(a.publishedOn)));
     Article.all = rows.map(ele => new Article(ele));
   };
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // C-OMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // This method makes a get request to the articles table and then with the resulting data runs loadAll, which we saw above sorted the data and created article objects, and then it runs the callback that is given when fetchAll is run. It is run in articleController.js in articleController.loadAll if the ctx doesn't have the articles yet. It is given the callback of articleData, which populates ctx.articles). 
   Article.fetchAll = callback => {
     $.get('/articles')
     .then(
@@ -75,7 +77,8 @@ var app = app || {};
     }
   };
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // C-OMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // This method makes an ajax query that deletes the entire articles table, then consoles out the response (that the table was deleted), and then runs the callback function that is given when it is called. It is never called. :(
   Article.truncateTable = callback => {
     $.ajax({
       url: '/articles',
