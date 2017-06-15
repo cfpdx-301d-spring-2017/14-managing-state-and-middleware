@@ -5,6 +5,7 @@ var app = app || {};
   const newArticle = {};
 
   // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // JOE C. SAYS: This function is using jQuery to grab all the HTML elements with the class of 'tab-content' and show them on the page. It is grabbing he HTML ID of export-field and hiding it. It is then placing an event listener with an ID of article-json and listens on the 'focus' user action and selects the thing that gets focused on. It is then creating a pair of event listeners with the ID of new-form. One acts on change, which performs newArticle.create and another ('submit') which calls newArticle.submit. They are event handlers and live in this same file.
   newArticle.initNewArticlePage = function() {
     $('.tab-content').show();
     $('#export-field').hide();
