@@ -13,5 +13,8 @@ page('/author/:authorName', app.articleController.loadByAuthor, app.articleContr
 page('/category/:categoryName', app.articleController.loadByCategory, app.articleController.index);
 
 // COMMENT: What is this function doing?
+// JOE C. SAYS: All it's doing is calling the function that the page.js library returns. Essentially, it's instantiating the use of the library for us.
+
 // STRETCH COMMENT: There is another way to write this same method. Find it in the documentation and comment what it is here.
+
 page();
