@@ -19,7 +19,8 @@ var app = app || {};
     Article.all = rows.map(ele => new Article(ele));
   };
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // (fetchAll is called in articleController.js if there are no articles in the Article.all array with a callback function or (articleData). It is also called in adminView with a callback fn of (adminView.init.adminPage). This function uses fetchAll with an API endpoing and using the .get method to load the Articles from our table.)
   Article.fetchAll = callback => {
     $.get('/articles')
     .then(
