@@ -4,7 +4,8 @@ var app = app || {};
 (function(module) {
   const articleView = {};
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // This function is compiling the Handlebars template. article.daysAgo is giving us how many days prior the article was pubished. It then returns a filled template for article data.
   const render = function(article) {
     let template = Handlebars.compile($('#article-template').text());
 
