@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('./public'));
 
 
-// C-OMMENT: What is this function doing? Why do we need it? Where does it receive a request from?
+// COMMENT: What is this function doing? Why do we need it? Where does it receive a request from?
 // proxyGitHub is called below on line 39, when github is part of the page URL. The proxyGitHub function logs to our console the phrase 'Routing Github request for' as well as the first param from our request (such as user/ or user/repos/). requestProxy is explained here (http://bit.ly/2tsrFfZ). We are making a request to the github API based on the first param in our request, explained above. The GITHUB_TOKEN is sent in the header and comes from our .env file.
 function proxyGitHub(request, response) {
   console.log('Routing GitHub request for', request.params[0]);
@@ -29,7 +29,7 @@ function proxyGitHub(request, response) {
 }
 
 
-// C-OMMENT: What is this route doing? Where does it receive a request from?
+// COMMENT: What is this route doing? Where does it receive a request from?
 // (put your response in a comment here)
 // no routes are set up in routes.js to connect us to new.html or admin.html. Below we use the express function sendFile to serve new.html or admin.html when the corresponding url is reached (/new, /admin). I don't believe a user would reach these pages based on our current UI.
 app.get('/new', (request, response) => response.sendFile('new.html', {root: './public'}));
@@ -152,6 +152,9 @@ app.delete('/articles', (request, response) => {
   .then(() => response.send('Delete complete'))
   .catch(console.error);
 });
+
+app.use( '/article/:id', express.static('./public') );
+app.use( '/author/:name', express.static('./public') );
 
 app.get('*', (request, response) => response.sendFile('index.html', {root: './public'}));
 
