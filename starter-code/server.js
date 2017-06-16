@@ -19,9 +19,10 @@ app.use(express.static('./public'));
 
 
 // DONE: What is this function doing? Why do we need it? Where does it receive a request from?
-// (put your response in a comment here)
+// (put your response in a DONE here)
 
-// The proxyGitHub function is passing request and response objects to the requestProxy function. This requestProxy function is accessing the params property of the request object and appending it to the end of the URL string. It also creates a headers property and assigns our GITHUB_TOKEN value to the authorization property. Both of these are required to access the GitHub repos. These values are passed to the wrapping IIFE function request parameter.
+// The proxyGitHub function is passing its request and response parameters (objects) to the requestProxy function. The requestProxy function creates a new object with two properties. The first is the 'url' property, which is a concatenated string comprised of a static string and the value of the request.params[0] property (i.e. '/users/repos'). The latter is appended to the end of the static string to complete the full url string. The second property is 'headers', which is actually another object with an Authorization property. This Authorization property is also a concatenated string comprised of a static string and the value of the GITHUB_TOKEN env variable in our .env file (accessed through the process object). These two properties are then passed back to higher-order app.get('github/*) function and used as its request parameter to provide the proper api endpoint and the token for authentication with GitHub. The app.get('github/*) response from GitHub, which is an array of repo objects, is then passed back to the originating requestRepos function as the 'data' parameter of the anonymous funtion (line 12 of repos.js file) called by the first .then method. 
+ 
 
 function proxyGitHub(request, response) {
   console.log('Routing GitHub request for', request.params[0]);
@@ -33,9 +34,9 @@ function proxyGitHub(request, response) {
 
 
 // DONE: What is this route doing? Where does it receive a request from?
-// (put your response in a comment here)
+// (put your response in a DONE here)
 
-// It would handle a request for the /new route in route.js if it existed (which it doesn't). If it did exist, then it would get passed the request and response objects. On the response object we would call the sendFile method to get and return new.html and let it know where to find it.
+// It would handle a request for the /new route in route.js if that route existed (which it doesn't). If the route did exist, when called it would pass app.get('/new') the related request and response objects to the response.sendFile method, which would return the 'new.html' file located in the '/public' directory.
 
 app.get('/new', (request, response) => response.sendFile('new.html', { root: './public' }));
 app.get('/admin', (request, response) => response.sendFile('admin.html', { root: './public' }));
@@ -113,9 +114,9 @@ app.post('/articles', function (request, response) {
 
 
 // DONE: What is this route doing? Where does it receive a request from?
-// (put your response in a comment here)
+// (put your response in a DONE here)
 
-// This function is called from the article.js Article.prototype.updateRecord. The function updates the relevant author record in the authors table and article record in articles table and sends back a response 'Update complete' if sucessful or an error, if not.
+// This function is called from Article.prototype.updateRecord method located in the article.js file. This function updates the related author record (based on request.body.author_id) in the authors table and then updates the related article record in articles table (based on request.params.id). If successful, it then sends back a 'Update complete' response. If not successful, it uses the .catch metho to log a console error message.
 
 app.put('/articles/:id', (request, response) => {
   client.query(`

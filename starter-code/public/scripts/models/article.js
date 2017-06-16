@@ -13,13 +13,15 @@ var app = app || {};
 
   // REVIEW: With ES6 arrow functions, if the function only has one parameter, you don't need parentheses.
   //         This is similar to saying Article.loadAll = function(rows).
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  //DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // Article.loadAll is called by Article.fetchall. It receives an array of objects from fetchAll as its 'rows' paramater. It then sorts the 'rows' array based on each object's publishedOn property (which it uses to create new Date objects set to the original object's publishedOn date property). It then uses the map method on the now sorted rows array to create a new array of Article objects and sets the Article.all array = to this new array.
   Article.loadAll = rows => {
     rows.sort((a, b) => (new Date(b.publishedOn)) - (new Date(a.publishedOn)));
     Article.all = rows.map(ele => new Article(ele));
   };
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // Article.fetchAll is called from the articleController.js file and the adminView.js file. Article.fetchAll calls $.get('/articles'), which executes a postgresql query that returns all articles from the database (along with an inner join on related author names and urls). The query results are pased back as the 'results' parameter of the '.then' anonymous function, which subsequently calls Article.loadAll and passes the query results to its own 'results' parameter. Once loadAll sorting and creating articles in the 'rows' array, fetchAll executes the callback function passed to it by the originating js files.
   Article.fetchAll = callback => {
     $.get('/articles')
       .then(
@@ -54,7 +56,9 @@ var app = app || {};
       }, []);
   };
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // The numWordsByAuthor function calculates the number of words each author has created (across all related articles). It uses the filter method on the Article.all array of articles to select total articles for each author, then uses the map method to create a new array along with the match method to remove spaces from each article before using reduce to calculate the total number of characters for the article (and add it to the acumulated total). This function is called by the initAdminPage.
+
   Article.numWordsByAuthor = () => {
     return Article.allAuthors().map(author => {
       return {
@@ -72,7 +76,10 @@ var app = app || {};
     }
   };
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+
+  // The Article.truncateTable function calls the app.delete('/articles') function in the server.js file, which removes all rows from the articles table in the kilovolt database. It then runs the console.log method, then the callback function that was passed to it from the calling function.
+    
   Article.truncateTable = callback => {
     $.ajax({
       url: '/articles',
