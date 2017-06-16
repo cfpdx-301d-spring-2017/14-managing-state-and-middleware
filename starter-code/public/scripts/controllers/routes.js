@@ -13,7 +13,8 @@ page('/author/:authorName', app.articleController.loadByAuthor, app.articleContr
 page('/category/:categoryName', app.articleController.loadByCategory, app.articleController.index);
 
 // DONE: What is this function doing?
-// This initiates the page object which turns on the listening in the above routes.
+// This function is part of the page.js module. It is executed when the routes.js file is loaded. The page() function must be executed to instantiate/load the page object, which is required for any explicit page listening routes to work. Effectively, calling page() 'starts' the page module. The other way to write this same method is to use page.start;.
 
-// STRETCH COMMENT: There is another way to write this same method. Find it in the documentation and comment what it is here.
+// STRETCH DONE: There is another way to write this same method. Find it in the documentation and DONE what it is here.
+// page.start([options]);
 page();

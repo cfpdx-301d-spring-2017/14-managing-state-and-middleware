@@ -5,9 +5,9 @@ var app = app || {};
   const aboutController = {};
 
   // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
-  // (put your response in a comment here)
+  // (put your response in a DONE here)
 
-  //This function shows the about id section in the DOM, and hides its siblings. It then calls the app.repos.requestRepos function and passes it the app.repoView.index as a callback function. It's called from routes.js, the page listener '/about'.
+  //This function calls the show() method to display the #about id section in the DOM, then hides all other sections using the chained .siblings().hide() methods. It then calls the app.repos.requestRepos function and passes it the app.repoView.index as the callback function. The aboutController.index function is called from the page '/about' listener in the routes.js file.
 
   aboutController.index = () => {
     $('#about').show().siblings().hide();
