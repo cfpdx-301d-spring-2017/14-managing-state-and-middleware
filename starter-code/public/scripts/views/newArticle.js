@@ -4,12 +4,14 @@ var app = app || {};
 (function(module) {
   const newArticle = {};
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // The initNewArticlePage does the following: 1) runs the show() method on the .tab-content class in the DOM, 2) hides the export-field id in the DOM, 3) adds an event listener for the focus event on the article-json id in the DOM with an event handler of $(this).select(). There is no article-json id on any html page, so the event listener/handler will never be executed. Likewise, the initNewArticlePage function will never be called because the only html page with the newArticle.js script reference is the new.html page, which is not exposed in the nav.
   newArticle.initNewArticlePage = function() {
     $('.tab-content').show();
     $('#export-field').hide();
     $('#article-json').on('focus', function() {
       $(this).select();
+      console.log('this.select value = ' + $(this));
     });
     $('#new-form').on('change', newArticle.create);
     $('#new-form').on('submit', newArticle.submit);
