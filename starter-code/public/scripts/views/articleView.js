@@ -4,7 +4,9 @@ var app = app || {};
 (function(module) {
   const articleView = {};
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // This render function is called by the articleView.index function in this same articleView.js file. The articleView.index function passes each article object in its 'articles' array to the render function, which calculates the number of days that have passed since each article was published and sets article.publishStatus property with a concatenated string that passes in the article.daysago value (or sets the value as 'draft' if no publish date exists). It then calls the 'marked' method (from marked.js library) passing the article.body content as the parameter. When the marked method is done, it calls 'template' function, which runs the handlebars.compile function on the article to create the related article DOM section, which is then returned to the calling function (articleView.index) and appended to the #articles id section of the DOM.
+
   const render = function(article) {
     let template = Handlebars.compile($('#article-template').text());
 
