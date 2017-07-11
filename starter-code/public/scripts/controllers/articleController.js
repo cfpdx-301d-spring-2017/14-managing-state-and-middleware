@@ -4,8 +4,8 @@ var app = app || {};
 (function(module) {
   const articleController = {};
 
-  // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
-  // (put your response in a comment here)
+  // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+  // This article uses our ctx variable to call on articleView.index from articleView.js, which sets up the articles page on index.html. It loops through our articles and appends them to the page using the render function.
   articleController.index = (ctx) => app.articleView.index(ctx.articles);
 
   // REVIEW: Middleware for grabbing one article by ID:
@@ -15,8 +15,8 @@ var app = app || {};
       next();
     };
 
-    // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
-    // (put your response in a comment here)
+    // DONE: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
+    // This function, which lives in article.js but is called as part of the IIFE here in articleController.js on load, uses our pages.js ctx variable as criteria to run a .get request for a specific record. This allows us to filter by article id. The articleData is the callback for the function.
     app.Article.findWhere('article_id', ctx.params.article_id, articleData);
   };
 
