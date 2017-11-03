@@ -19,7 +19,7 @@ app.use(express.static('./public'));
 
 
 // COMMENT: What is this function doing? Why do we need it? Where does it receive a request from?
-// (put your response in a comment here)
+// JOHN SAYS: The proxyGitHub function is logging our efforts to use the github API and token to retrieve information from said API. In this case a list of all repositories. This function takes a request and response as parameters. 
 function proxyGitHub(request, response) {
   console.log('Routing GitHub request for', request.params[0]);
   (requestProxy({
@@ -30,7 +30,7 @@ function proxyGitHub(request, response) {
 
 
 // COMMENT: What is this route doing? Where does it receive a request from?
-// (put your response in a comment here)
+// JOHN SAYS: This route is getting a request from the user to go to the new.html webpage assuming it starts from the /public root folder. Essentially it is just handling traffic.
 app.get('/new', (request, response) => response.sendFile('new.html', {root: './public'}));
 app.get('/admin', (request, response) => response.sendFile('admin.html', {root: './public'}));
 app.get('/github/*', proxyGitHub);
@@ -106,8 +106,8 @@ app.post('/articles', function(request, response) {
 });
 
 
-// COMMENT: What is this route doing? Where does it receive a request from?
-// (put your response in a comment here)
+// COMMENTED: What is this route doing? Where does it receive a request from?
+// JOHN SAYS: This route is making a request to the database. It is asking to update the authors database, presumably based on user input. This query requires that all the relevant fields be filled out. At the end it sends a response stating that the update is completed.
 app.put('/articles/:id', (request, response) => {
   client.query(`
     UPDATE authors
