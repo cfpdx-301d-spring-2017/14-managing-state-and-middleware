@@ -8,7 +8,7 @@ const requestProxy = require('express-request-proxy'); // REVIEW: We've added a 
 const PORT = process.env.PORT || 3000;
 const app = express();
 // const conString = 'postgres://USERNAME:PASSWORD@HOST:PORT';
-const conString = ''; // TODO: Don't forget to set your own conString
+const conString = 'postgres://localhost:5432/kilovolt'; // TODO: Don't forget to set your own conString
 const client = new pg.Client(conString);
 client.connect();
 client.on('error', err => console.error(err));
@@ -19,7 +19,7 @@ app.use(express.static('./public'));
 
 
 // COMMENT: What is this function doing? Why do we need it? Where does it receive a request from?
-// (put your response in a comment here)
+// proxyGitHub is called below on line 39, when github is part of the page URL. The proxyGitHub function logs to our console the phrase 'Routing Github request for' as well as the first param from our request (such as user/ or user/repos/). requestProxy is explained here (http://bit.ly/2tsrFfZ). We are making a request to the github API based on the first param in our request, explained above. The GITHUB_TOKEN is sent in the header and comes from our .env file.
 function proxyGitHub(request, response) {
   console.log('Routing GitHub request for', request.params[0]);
   (requestProxy({
@@ -31,6 +31,7 @@ function proxyGitHub(request, response) {
 
 // COMMENT: What is this route doing? Where does it receive a request from?
 // (put your response in a comment here)
+// no routes are set up in routes.js to connect us to new.html or admin.html. Below we use the express function sendFile to serve new.html or admin.html when the corresponding url is reached (/new, /admin). I don't believe a user would reach these pages based on our current UI.
 app.get('/new', (request, response) => response.sendFile('new.html', {root: './public'}));
 app.get('/admin', (request, response) => response.sendFile('admin.html', {root: './public'}));
 app.get('/github/*', proxyGitHub);
@@ -108,6 +109,7 @@ app.post('/articles', function(request, response) {
 
 // COMMENT: What is this route doing? Where does it receive a request from?
 // (put your response in a comment here)
+// the below function is meant update author and article information, corresponding to a particular :id, in the database. This would happen from the admin page, which is not reachable via the present UI.
 app.put('/articles/:id', (request, response) => {
   client.query(`
     UPDATE authors
@@ -150,6 +152,9 @@ app.delete('/articles', (request, response) => {
   .then(() => response.send('Delete complete'))
   .catch(console.error);
 });
+
+app.use( '/article/:id', express.static('./public') );
+app.use( '/author/:name', express.static('./public') );
 
 app.get('*', (request, response) => response.sendFile('index.html', {root: './public'}));
 

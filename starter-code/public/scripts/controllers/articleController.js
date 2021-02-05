@@ -5,7 +5,7 @@ var app = app || {};
   const articleController = {};
 
   // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
-  // (put your response in a comment here)
+  // This creates a new method of articleController that takes the parameter of the context (ctx) and uses its articles property as the argument for articleView.index. This method, articleView.index, is defined in articleView.js and is the final view method that takes those articles and renders them to the DOM (via the handlebars template) and runs populateFilters and handleFilters.
   articleController.index = (ctx) => app.articleView.index(ctx.articles);
 
   // REVIEW: Middleware for grabbing one article by ID:
@@ -16,7 +16,7 @@ var app = app || {};
     };
 
     // COMMENT: What is this function doing? Where is it called? Does it call any other functions, and if so, in what file(s) do those function(s) live?
-    // (put your response in a comment here)
+    // This runs Article.findWhere, which is in article.js, and takes three parameters--field, value, and callback. The field we enter here (article_id) is what will be used to find the field in the database; likewise the value of the article_id from the params property of the ctx is used as the value in findWhere to query that particular row of the table; then articleData is run as the callback in findWhere. articleData is just above, and it makes the articles property of ctx be the article retrieved from the database, and then it runs next(). This runs app.articleController.index, in routes.js.
     app.Article.findWhere('article_id', ctx.params.article_id, articleData);
   };
 
